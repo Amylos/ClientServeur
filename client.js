@@ -6,6 +6,7 @@
 // Une fois en possession de ces informations, il envoie au serveur le login et le mot de passe.
 // En cas de succès, le client affiche les données de manière formattée.
 
+
 // Côté serveur :
 // Le serveur reçoit le login et le mot de passe.
 // Il compare avec une source de données qui contient des logins et des hash de mot de passe.
@@ -21,3 +22,25 @@
 // La communication entre le client et le serveur, c'est vous qui voyez :
 // Ca peut être un fetch côté client, avec un serveur http côté serveur
 // Ca peut être deux scripts Node, où le premier fait appel à exec() (module child_process) pour appeler le serveur.
+
+
+// fetch --> GET 
+
+
+
+
+// const server = http.createServer((req, res) => {
+//     res.write("Hello world");
+//     console.log(colors.rainbow('OMG Rainbows!'));
+//     res.end();
+// });
+// // Ce serveur http écoute sur le port 3000.
+// server.listen(3000);
+
+
+// fetch("http://localhost:3000/")
+
+
+
+
+
