@@ -1,0 +1,17 @@
+[
+    {
+      "login": "alice",
+      "password": "ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f",
+      "address": "123 Rue de Paris, Paris, France"
+    },
+    {
+      "login": "bob",
+      "password": "65e84be33532fb784c48129675f9eff3a682b27168c0ea744b2cf58ee02337c5",
+      "address": "456 Avenue des Champs, Paris, France"
+    },
+    {
+      "login": "charlie",
+      "password": "89e01536ac207279409d4de1e5253e01f4a1769e696db0d6062ca9b8f56767c8",
+      "address": "789 Boulevard Saint-Germain, Paris, France"
+    }
+  ]
