@@ -25,29 +25,101 @@
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
+const bcrypt = require('bcrypt');
 
+// Créer le serveur HTTP
 const server = http.createServer((req, res) => {
-    const parsedUrl = url.parse(req.url, true);
-    const query = parsedUrl.query;
+    if (req.method === 'POST') {
+        let body = '';
 
-    const login = "login";
-    const password = "password";
+        // Lire les données de la requête
+        req.on('data', chunk => {
+            body += chunk.toString(); // Accumule les fragments de données
+        });
 
-    fs.readFile('data.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error('Erreur lors de la lecture du fichier:', err);
-            res.writeHead(500, { 'Content-Type': 'text/plain' });
-            res.end('Erreur serveur');
-            return;
-        }
+        // Quand toutes les données sont reçues
+        req.on('end', () => {
+            try {
+                // Parse le corps de la requête en JSON
+                const parsedData = JSON.parse(body);
+                const {login, password} = parsedData;
+                console.log('Données reçues du client :', login,password);
 
-        console.log('Contenu de data.json:', data);
 
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(data);
-    });
+                fs.readFile('data.json', 'utf8', (err, data) => {
+                    if (err) {
+                        console.error('Erreur lors de la lecture du fichier:', err);
+                        res.writeHead(500, { 'Content-Type': 'text/plain' });
+                        res.end('Erreur serveur');
+                        return;
+                    }
+
+                    let parsedFileData;
+                    try {
+                        parsedFileData = JSON.parse(data);
+                        parsedFileData.map((personne)=>{
+
+                            bcrypt.compare(password, personne.password, (err, result) => {
+                                if (err) {
+                                    console.error('Erreur lors de la comparaison:', err);
+                                } else if (result) {
+                                    console.log('Le mot de passe est valide !');
+                                    // Réponse au client avec les données parsées
+                                    res.writeHead(200, { 'Content-Type': 'application/json' });
+                                    res.end(JSON.stringify({
+                                        message: 'Addresse de l utilisateur',
+                                        address: personne.address,
+                                    }));
+                                } else {
+                                    console.log('Le mot de passe est invalide.');
+                                }
+                            });
+                        });
+
+                    } catch (parseError) {
+                        console.error('Erreur lors du parsing de data.json:', parseError);
+                        res.writeHead(500, { 'Content-Type': 'text/plain' });
+                        res.end('Erreur lors du parsing du fichier JSON');
+                        return;
+                    }
+
+                  
+                });
+
+            } catch (error) {
+                console.error('Erreur lors du parsing des données:', error);
+                res.writeHead(400, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Erreur lors du parsing des données' }));
+            }
+        });
+    } else {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Seules les requêtes POST sont supportées');
+    }
 });
 
+// Démarrer le serveur sur le port 3000
 server.listen(3000, () => {
     console.log('Serveur à l\'écoute sur le port 3000');
 });
+
+
+
+   // fs.readFile('data.json', 'utf8', (err, data) => {
+    //     if (err) {
+    //         console.error('Erreur lors de la lecture du fichier:', err);
+    //         res.writeHead(500, { 'Content-Type': 'text/plain' });
+    //         res.end('Erreur serveur');
+    //         return;
+    //     }
+
+    //     console.log('Contenu de data.json:', data);
+
+    //     res.writeHead(200, { 'Content-Type': 'application/json' });
+    //     res.end(data);
+    // });
+
+
+
+
+  

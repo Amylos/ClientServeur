@@ -29,12 +29,33 @@
 
 
 
+const readline = require('readline')
+const fetch = require('node-fetch');
 
 
+let rl = readline.createInterface(
+    process.stdin,
+    process.stdout
+);
 
-// fetch("http://localhost:3000/")
+// Get login and password from users
+rl.question('LOGIN : ', (login) => {
+    rl.question('PASSWORD : ', (password) => {
 
-
-
-
-
+        // Send the data to the server
+        fetch('http://localhost:3000', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({'login':login,'password':password})
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Réponse du serveur:', data);
+        })
+        .catch((error) => {
+            console.error('Erreur:', error);
+        });
+    });
+});
